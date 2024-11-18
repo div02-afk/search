@@ -23,7 +23,7 @@ struct Args {
 #[tokio::main]
 async fn main() -> Result<(), Box<dyn std::error::Error>> {
     let args = Args::parse();
-    println!("args: {:?}", args);
+    // println!("args: {:?}", args);
 
     if args.chat {
         let query = args.query.clone();

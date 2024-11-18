@@ -70,6 +70,7 @@ pub async fn gemini_chat(query:String) ->Result<String, Box<dyn std::error::Erro
     
     tx.send(true)?;
     spinner_handle.await?;
+    
     println!("{}",response_text.candidates[0].content.parts[0].text.clone());
     Ok("".to_string())
 }
