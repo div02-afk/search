@@ -5,7 +5,7 @@ edition = "2021"
 license = "MIT"
 repository = "https://github.com/div02-afk/search"
 description = "A lightweight search app that combines web search results with AI-generated summaries"
-keywords = ["search", "web search", "chatbot"]
+keywords = ["search", "websearch", "chatbot"]
 [dependencies]
 clap = { version = "4.0", features = ["derive"] }
 dotenv = "0.15.0"
