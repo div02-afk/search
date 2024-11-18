@@ -57,25 +57,25 @@ pub async fn google_search(query: String, count: u8) -> Result<String, Box<dyn s
 }
 
 
-pub async fn brave_search(query: String, count: u8) -> Result<String, Box<dyn std::error::Error>>{
-    dotenv().ok();
+// pub async fn brave_search(query: String, count: u8) -> Result<String, Box<dyn std::error::Error>>{
+//     dotenv().ok();
 
-    let api_key = env::var("GOOGLE_CONSOLE_API_KEY")?;
-    let cx = env::var("GOOGLE_CUSTOM_SEARCH_ENGINE_ID")?;
+//     let api_key = env::var("GOOGLE_CONSOLE_API_KEY")?;
+//     let cx = env::var("GOOGLE_CUSTOM_SEARCH_ENGINE_ID")?;
 
-    let url = format!(
-        "https://www.googleapis.com/customsearch/v1?q={}&key={}&cx={}",
-        query,
-        api_key,
-        cx
-    );
+//     let url = format!(
+//         "https://www.googleapis.com/customsearch/v1?q={}&key={}&cx={}",
+//         query,
+//         api_key,
+//         cx
+//     );
 
-    let (tx, spinner_handle) = loader().await;
+//     let (tx, spinner_handle) = loader().await;
 
-    let client = Client::new();
-    let response = client.get(&url).send().await?;
-    let search_result: SearchResult = response.json().await?;
+//     let client = Client::new();
+//     let response = client.get(&url).send().await?;
+//     let search_result: SearchResult = response.json().await?;
 
-    tx.send(true)?;
-    spinner_handle.await?;
-}
+//     tx.send(true)?;
+//     spinner_handle.await?;
+// }
