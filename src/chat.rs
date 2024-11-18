@@ -1,9 +1,9 @@
+use crate::loader::loader;
 use dotenv::dotenv;
 use reqwest::Client;
+use serde::Deserialize;
 use serde_json::json;
 use std::env;
-use crate::loader::loader;
-use serde::Deserialize;
 
 #[derive(Debug, Deserialize)]
 struct GeminiResponse {
@@ -37,8 +37,7 @@ struct UsageMetadata {
     totalTokenCount: u32,
 }
 
-
-pub async fn gemini_chat(query:String) ->Result<String, Box<dyn std::error::Error>> {
+pub async fn gemini_chat(query: String) -> Result<String, Box<dyn std::error::Error>> {
     dotenv().ok();
     let api_key = env::var("GEMINI_API_KEY")?;
     let url = format!("https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key={}",
@@ -56,7 +55,7 @@ pub async fn gemini_chat(query:String) ->Result<String, Box<dyn std::error::Erro
         ]
     });
 
-    let (tx,spinner_handle) = loader().await;
+    let (tx, spinner_handle) = loader().await;
     let client = Client::new();
 
     // Send the POST request
@@ -66,11 +65,14 @@ pub async fn gemini_chat(query:String) ->Result<String, Box<dyn std::error::Erro
         .json(&body)
         .send()
         .await?;
-    let response_text:GeminiResponse = response.json().await?;
-    
+    let response_text: GeminiResponse = response.json().await?;
+
     tx.send(true)?;
     spinner_handle.await?;
-    
-    println!("{}",response_text.candidates[0].content.parts[0].text.clone());
+
+    println!(
+        "{}",
+        response_text.candidates[0].content.parts[0].text.clone()
+    );
     Ok("".to_string())
 }

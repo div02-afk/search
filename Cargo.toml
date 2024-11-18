@@ -2,7 +2,9 @@
 name = "simpleSearch"
 version = "0.1.0"
 edition = "2021"
-
+license = "MIT"
+description = "A lightweight search app that combines web search results with AI-generated summaries"
+keywords = ["search", "web search", "chatbot"]
 [dependencies]
 clap = { version = "4.0", features = ["derive"] }
 dotenv = "0.15.0"

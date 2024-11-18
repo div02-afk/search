@@ -1,9 +1,9 @@
-mod search;
-mod loader;
 mod chat;
-use clap::Parser;
-use crate::search::google_search;
+mod loader;
+mod search;
 use crate::chat::gemini_chat;
+use crate::search::google_search;
+use clap::Parser;
 use tokio::join;
 
 #[derive(Parser, Debug)]
