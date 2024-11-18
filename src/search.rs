@@ -39,7 +39,7 @@ pub async fn google_search(query: String, count: u8) -> Result<String, Box<dyn s
 
     println!();
     if let Some(items) = search_result.items {
-        let mut result_count = count.min(items.len() as u8);
+        let result_count = count.min(items.len() as u8);
 
         for item in items.into_iter().take(result_count as usize) {
             let hyperlink = format!("\x1b]8;;{0}\x1b\\{1}\x1b]8;;\x1b\\", item.link, item.title);

@@ -4,7 +4,6 @@ mod search;
 use crate::chat::gemini_chat;
 use crate::search::google_search;
 use clap::Parser;
-use tokio::join;
 
 #[derive(Parser, Debug)]
 #[command(version, about, long_about = None)]
