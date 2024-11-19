@@ -19,3 +19,9 @@ console = "0.15.8"
 select = "0.6.0"
 headless_chrome = "1.0.15"
 anyhow = "1.0.93"
+
+
+
+[[bin]]
+name = "simpleSearch"
+path = "src/main.rs"
