@@ -50,8 +50,7 @@ pub async fn gemini_chat(query: String) -> Result<String, Box<dyn std::error::Er
     let url =
         format!("https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash-8b:generateContent?key={}", api_key);
 
-    let body =
-        json!({
+    let body = json!({
         "contents": [
             {
                 "parts": [
@@ -65,7 +64,7 @@ pub async fn gemini_chat(query: String) -> Result<String, Box<dyn std::error::Er
             "maxOutputTokens":1200,
         },
         "system_instruction": {
-            "parts":{ 
+            "parts":{
                 "text": "You are simpleSearch assistant, summarise/describe/define the input for me, keep it brief and factual"}
             },
         "model":"gemini-1.5-flash-8b"
@@ -80,7 +79,8 @@ pub async fn gemini_chat(query: String) -> Result<String, Box<dyn std::error::Er
         .post(&url)
         .header("Content-Type", "application/json")
         .json(&body)
-        .send().await?;
+        .send()
+        .await?;
 
     // let response_body = response.text().await?;
     // println!("Raw Response Body: {}", response_body);
@@ -90,6 +90,9 @@ pub async fn gemini_chat(query: String) -> Result<String, Box<dyn std::error::Er
     tx.send(true)?;
     spinner_handle.await?;
 
-    println!("\n{}", response_text.candidates[0].content.parts[0].text.clone());
+    println!(
+        "\n{}",
+        response_text.candidates[0].content.parts[0].text.clone()
+    );
     Ok("".to_string())
 }

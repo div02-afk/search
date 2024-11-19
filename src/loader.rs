@@ -3,7 +3,7 @@ use std::{thread, time::Duration};
 use tokio::sync::watch;
 use tokio::task;
 
-pub async fn loader(msg:String) -> (watch::Sender<bool>, task::JoinHandle<()>) {
+pub async fn loader(msg: String) -> (watch::Sender<bool>, task::JoinHandle<()>) {
     let term = Term::stdout();
     let spinner_chars = ["⠋", "⠙", "⠹", "⠸", "⠼", "⠴", "⠦", "⠧", "⠇", "⠏"];
     let mut spinner_index = 0;
