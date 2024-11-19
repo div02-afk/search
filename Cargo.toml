@@ -7,7 +7,7 @@ repository = "https://github.com/div02-afk/search"
 description = "A lightweight search app that combines web search results with AI-generated summaries"
 readme = "README.md"
 homepage = "https://crates.io/crates/simpleSearch"
-keywords = ["search", "websearch", "chatbot", "torrent", "piratebay", "summary"]
+keywords = ["search", "websearch", "chatbot", "torrent", "summary"]
 [dependencies]
 clap = { version = "4.0", features = ["derive"] }
 dotenv = "0.15.0"
