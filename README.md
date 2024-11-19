@@ -14,6 +14,10 @@
 
 - Rust and Cargo installed. You can follow the official installation instructions [here](https://www.rust-lang.org/tools/install).
 - API keys for any web search services and AI summarization services used (e.g., Bing Search API, OpenAI API).
+- API keys and Other env required:
+    - GOOGLE_CONSOLE_API_KEY
+    - GOOGLE_CUSTOM_SEARCH_ENGINE_ID
+    - GEMINI_API_KEY
 
 ## Usage
     ### Usage
