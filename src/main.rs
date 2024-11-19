@@ -10,7 +10,7 @@ use clap::Parser;
 #[derive(Parser, Debug)]
 #[command(version, about, long_about = None)]
 struct Args {
-    #[arg(short, long,default_value="")]
+    #[arg(short, long, default_value = "")]
     query: String,
 
     #[arg(short, long, default_value = "google")]
@@ -27,7 +27,12 @@ struct Args {
 async fn main() -> Result<(), Box<dyn std::error::Error>> {
     let args = Args::parse();
     // println!("args: {:?}", args);
-
+    if args.query != "" && args.piratebay != "" {
+        println!("Please provide only one of the following options: --query or --piratebay");
+    }
+    if args.number_of_results == 0 {
+        println!("Please provide a number greater than 0 for --number-of-results");
+    }
     if args.chat && args.query != "" {
         let query = args.query.clone();
 
@@ -36,8 +41,12 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
             gemini_chat(query.clone())
         );
     }
-    if args.pirate != "" {
-        pirate_bay_scrapper(args.pirate).await?;
+    if args.piratebay != "" {
+        if args.chat {
+            println!("Chat option is not available with --piratebay option");
+        } else {
+            pirate_bay_scrapper(args.piratebay, args.number_of_results).await?;
+        }
     }
     Ok(())
 }

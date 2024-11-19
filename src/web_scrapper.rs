@@ -1,19 +1,21 @@
 use crate::loader::loader;
-use select::document::Document;
+use anyhow::{Error, Result};
 use console::style;
-use select::predicate::{ Name, Class };
+use headless_chrome::{Browser, Tab};
+use select::document::Document;
 use select::node::Node;
-use serde_json::Value;
+use select::predicate::Class;
 use serde::Deserialize;
-use headless_chrome::Browser;
+use serde_json::Value;
+use std::sync::Arc;
 
 #[derive(Deserialize, Debug)]
 struct PirateBayEntry {
     title: String,
     magnet: String,
     size: String,
-    seeders: u32,
-    leechers: u32,
+    seeders: String,
+    leechers: String,
     uploaded: String,
     uploader: String,
     category: String,
@@ -26,22 +28,37 @@ fn find_element_by_class<'a>(node: &'a Node<'a>, class: &'a str) -> String {
         .unwrap_or_else(|| "".to_string())
 }
 
-pub async fn pirate_bay_scrapper(query: String) -> Result<(), Box<dyn std::error::Error>> {
-    let url = format!("https://thepiratebay.org/search.php?q={}&cat=0", query);
+pub async fn pirate_bay_scrapper(
+    query: String,
+    number_of_results: u8,
+) -> Result<(), Box<dyn std::error::Error>> {
     let (tx, spinner_handle) = loader().await;
     let browser = Browser::default()?;
-    let tab = browser.new_tab()?;
 
-    // Navigate to the page and wait for JavaScript to execute
-    tab.navigate_to(url.as_str())?.wait_until_navigated()?;
-    tab.wait_for_element(".list-entry")?;
+    let future2 = async {
+        let url = format!("https://thepiratebay.org/search.php?q={}&cat=0", query);
+        let new_tab = browser.new_tab()?;
+        new_tab.navigate_to(url.as_str())?.wait_until_navigated()?;
+        // println!("Navigated to: 2");
+        Ok(new_tab)
+    };
+    let tab: Result<Arc<Tab>, Error> = tokio::select! {
+        // tab_result = future1 => tab_result,
+        tab_result = future2 => tab_result,
+    };
+
+    // Handle errors if any future fails
+    let tab = tab?;
 
     tx.send(true)?;
     spinner_handle.await?;
 
     let mut count = 0;
-    // let body = tab.evaluate("Array.from(document.querySelectorAll('.list-entry')).map(el => el.innerHTML)", true)?.value.unwrap();
-    let body = tab.evaluate("document.body.innerHTML", true)?.value.unwrap(); // .unwrap().value.unwrap();
+
+    let body = tab
+        .evaluate("document.body.innerHTML", true)?
+        .value
+        .unwrap(); // .unwrap().value.unwrap();
     let body_html_str = match body {
         Value::String(html) => html,
         _ => {
@@ -65,12 +82,8 @@ pub async fn pirate_bay_scrapper(query: String) -> Result<(), Box<dyn std::error
             .unwrap()
             .to_string();
         let size = find_element_by_class(&node, "item-size");
-        let seeders = find_element_by_class(&node, "item-seed")
-            .parse::<u32>()
-            .unwrap_or_else(|_| 0);
-        let leechers = find_element_by_class(&node, "item-leech")
-            .parse::<u32>()
-            .unwrap_or_else(|_| 0);
+        let seeders = find_element_by_class(&node, "item-seed");
+        let leechers = find_element_by_class(&node, "item-leech");
         let uploaded = find_element_by_class(&node, "item-uploaded");
         let uploader = find_element_by_class(&node, "item-user");
 
@@ -87,21 +100,23 @@ pub async fn pirate_bay_scrapper(query: String) -> Result<(), Box<dyn std::error
         if magnet != "" {
             entries.push(entry);
         }
-    }
-
-    for entry in entries {
-        count += 1;
-        if(count > 5) {
+        if (entries.len() as u8) >= number_of_results {
             break;
         }
-        let hyperlink = format!("\x1b]8;;{0}\x1b\\{1}\x1b]8;;\x1b\\", entry.magnet, entry.title);
+    }
+    for entry in entries {
+        count += 1;
+        if count > number_of_results {
+            break;
+        }
+        let hyperlink = format!(
+            "\x1b]8;;{0}\x1b\\{1}\x1b]8;;\x1b\\",
+            entry.magnet, entry.title
+        );
         println!("{}", style(hyperlink).cyan().blink());
         println!(
             "Category: {}, Size:{}, Seeders:{}, Leechers:{}",
-            entry.category,
-            entry.size,
-            entry.seeders,
-            entry.leechers
+            entry.category, entry.size, entry.seeders, entry.leechers
         );
         println!("Uploaded: {}, Uploader: {}", entry.uploaded, entry.uploader);
         println!("");

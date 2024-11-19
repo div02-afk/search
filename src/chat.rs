@@ -8,21 +8,22 @@ use std::env;
 #[derive(Debug, Deserialize)]
 struct GeminiResponse {
     candidates: Vec<Candidate>,
-    usageMetadata: UsageMetadata,
-    modelVersion: String,
+    // #[serde(skip)]
+    // usageMetadata: UsageMetadata,
+    // modelVersion: String,
 }
 
 #[derive(Debug, Deserialize)]
 struct Candidate {
     content: Content,
-    finishReason: String,
-    avgLogprobs: f64,
+    // finishReason: String,
+    // avgLogprobs: f64,
 }
 
 #[derive(Debug, Deserialize)]
 struct Content {
     parts: Vec<Part>,
-    role: String,
+    // role: String,
 }
 
 #[derive(Debug, Deserialize)]
@@ -30,18 +31,11 @@ struct Part {
     text: String,
 }
 
-#[derive(Debug, Deserialize)]
-struct UsageMetadata {
-    promptTokenCount: u32,
-    candidatesTokenCount: u32,
-    totalTokenCount: u32,
-}
-
 pub async fn gemini_chat(query: String) -> Result<String, Box<dyn std::error::Error>> {
     dotenv().ok();
     let api_key = env::var("GEMINI_API_KEY")?;
-    let url = format!("https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key={}",
-    api_key);
+    let url =
+        format!("https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key={}", api_key);
 
     let body = json!({
         "contents": [
@@ -52,7 +46,11 @@ pub async fn gemini_chat(query: String) -> Result<String, Box<dyn std::error::Er
                     }
                 ]
             }
-        ]
+        ],"generationConfig": {
+            "maxOutputTokens": 800,
+        },"system_instruction": {
+    "parts":
+      { "text": "You are simpleSearch assistant, summarise/describe the input for me, keep it brief" }},
     });
 
     let (tx, spinner_handle) = loader().await;
