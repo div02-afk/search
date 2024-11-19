@@ -20,7 +20,7 @@ struct Args {
     #[arg(short, long, default_value_t = 5)]
     number_of_results: u8,
     #[arg(short, long, default_value = "")]
-    pirate: String,
+    piratebay: String,
 }
 
 #[tokio::main]

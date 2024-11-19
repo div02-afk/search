@@ -26,10 +26,11 @@
 
     #### Flags and Options
 
-    - `-q`, `--query` : Specify the search query(required).
+    - `-q`, `--query` : Specify the search query.
     - `-c`, `--chat` : Enable chatbot summary of the search results(default: false).
     - `-n`, `--number_of_results` : Set the number of search results to summarize(default: 5).
     - `-s`, `--search` : Search Engine(default: Google) Available: Google
+    - `-p`, `--piratebay` : Query The Pirate Bay for torrents.
 
     #### Examples
 
