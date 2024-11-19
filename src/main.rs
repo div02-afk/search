@@ -26,7 +26,7 @@ struct Args {
 #[tokio::main]
 async fn main() -> Result<(), Box<dyn std::error::Error>> {
     let args = Args::parse();
-    // println!("args: {:?}", args);
+    println!("args: {:?}", args);
     if args.query != "" && args.piratebay != "" {
         println!("Please provide only one of the following options: --query or --piratebay");
     }
@@ -40,6 +40,10 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
             google_search(query.clone(), args.number_of_results),
             gemini_chat(query.clone())
         );
+    }
+    if args.query != "" {
+        println!("Searching for: {}", args.query);
+        google_search(args.query, args.number_of_results).await?;
     }
     if args.piratebay != "" {
         if args.chat {

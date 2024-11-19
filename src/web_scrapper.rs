@@ -113,7 +113,7 @@ pub async fn pirate_bay_scrapper(
             "\x1b]8;;{0}\x1b\\{1}\x1b]8;;\x1b\\",
             entry.magnet, entry.title
         );
-        println!("{}", style(hyperlink).cyan().blink());
+        println!("{}", style(hyperlink).cyan());
         println!(
             "Category: {}, Size:{}, Seeders:{}, Leechers:{}",
             entry.category, entry.size, entry.seeders, entry.leechers

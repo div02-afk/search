@@ -22,7 +22,6 @@ pub async fn google_search(query: String, count: u8) -> Result<String, Box<dyn s
 
     let api_key = env::var("GOOGLE_CONSOLE_API_KEY")?;
     let cx = env::var("GOOGLE_CUSTOM_SEARCH_ENGINE_ID")?;
-
     let url = format!(
         "https://www.googleapis.com/customsearch/v1?q={}&key={}&cx={}",
         query, api_key, cx
@@ -43,7 +42,7 @@ pub async fn google_search(query: String, count: u8) -> Result<String, Box<dyn s
 
         for item in items.into_iter().take(result_count as usize) {
             let hyperlink = format!("\x1b]8;;{0}\x1b\\{1}\x1b]8;;\x1b\\", item.link, item.title);
-            println!("{}", style(hyperlink).cyan().blink());
+            println!("{}", style(hyperlink).cyan());
             println!("{}", item.snippet);
             println!();
         }
