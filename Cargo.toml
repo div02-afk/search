@@ -1,9 +1,9 @@
 [package]
 name = "simpleSearch"
-version = "0.1.3"
+version = "0.1.4"
 edition = "2021"
 license = "MIT"
-repository = "https://github.com/div02-afk/search"
+repository = "https://github.com/div02-afk/simpleSearch"
 description = "A lightweight search app that combines web search results with AI-generated summaries"
 readme = "README.md"
 homepage = "https://crates.io/crates/simpleSearch"
