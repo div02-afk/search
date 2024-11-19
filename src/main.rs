@@ -26,26 +26,22 @@ struct Args {
 #[tokio::main]
 async fn main() -> Result<(), Box<dyn std::error::Error>> {
     let args = Args::parse();
-    println!("args: {:?}", args);
+    // println!("args: {:?}", args);
     if args.query != "" && args.piratebay != "" {
         println!("Please provide only one of the following options: --query or --piratebay");
-    }
-    if args.number_of_results == 0 {
+    } else if args.number_of_results == 0 {
         println!("Please provide a number greater than 0 for --number-of-results");
-    }
-    if args.chat && args.query != "" {
+    } else if args.chat && args.query != "" {
         let query = args.query.clone();
 
         let (_google_search_result, _gemini_chat_result) = tokio::join!(
             google_search(query.clone(), args.number_of_results),
             gemini_chat(query.clone())
         );
-    }
-    if args.query != "" {
+    } else if args.query != "" {
         println!("Searching for: {}", args.query);
         google_search(args.query, args.number_of_results).await?;
-    }
-    if args.piratebay != "" {
+    } else if args.piratebay != "" {
         if args.chat {
             println!("Chat option is not available with --piratebay option");
         } else {

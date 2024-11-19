@@ -32,7 +32,7 @@ pub async fn pirate_bay_scrapper(
     query: String,
     number_of_results: u8,
 ) -> Result<(), Box<dyn std::error::Error>> {
-    let (tx, spinner_handle) = loader().await;
+    let (tx, spinner_handle) = loader("".to_string()).await;
     let browser = Browser::default()?;
 
     let future2 = async {

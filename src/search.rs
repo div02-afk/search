@@ -27,7 +27,7 @@ pub async fn google_search(query: String, count: u8) -> Result<String, Box<dyn s
         query, api_key, cx
     );
 
-    let (tx, spinner_handle) = loader().await;
+    let (tx, spinner_handle) = loader("".to_string()).await;
 
     let client = Client::new();
     let response = client.get(&url).send().await?;
